@@ -1,23 +1,28 @@
 import datetime
 import os
 
-def scan_folder(folder_path):
-    files_data = []
+def scan_folder(path1):
+    all_files = []
 
-    for root, dirs, files in os.walk(folder_path):
-        for file in files:
-            full_path = os.path.join(root, file)
-            try:
-                size = os.path.getsize(full_path)
-                mtime_timestamp = os.path.getmtime(full_path)
-                mtime_str = datetime.datetime.fromtimestamp(mtime_timestamp).strftime('%Y-%m-%d %H:%M:%S')
+    def recurse(path2):
+        try:
+            vhod = os.listdir(path2)
+        except (PermissionError, OSError):
+            return
 
-                files_data.append({
-                    'path': full_path,
-                    'size': size,
-                    'mtime': mtime_str
-                })
-            except (OSError, PermissionError) as e:
-                print(f"Предупреждение: не удалось прочитать {full_path} - {e}")
-                continue
-    return files_data
+        for vh in vhod:
+            all_path = os.path.join(path2, vh)
+
+            if os.path.isdir(all_path):
+                recurse(all_path)
+            else:
+                try:
+                    size = os.path.getsize(all_path)
+                    mtime_ts = os.path.getmtime(all_path)
+                    mtime_str = datetime.datetime.fromtimestamp(mtime_ts).strftime('%Y-%m-%d %H:%M:%S')
+                    all_files.append({'path': all_path,'size': size,'mtime': mtime_str})
+                except (PermissionError, OSError):
+                    continue
+
+    recurse(path1)
+    return all_files

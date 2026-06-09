@@ -19,12 +19,11 @@ def main():
     files = scan_folder(target_folder)
 
     print(f"Найдено файлов: {len(files)}\n")
-    print("Список файлов (путь | размер (байт) | дата изменения):")
-    print("-" * 80)
 
+    print("Найдены файлы:")
     for f in files:
-        path_short = f['path'] if len(f['path']) < 60 else '...' + f['path'][-57:]
-        print(f"{path_short:<60} | {f['size']:>10} | {f['mtime']}")
+        print(f"Путь: {f['path']}, Размер: {f['size']} байт, Дата: {f['mtime']}")
+
 
 if __name__ == "__main__":
     main()
