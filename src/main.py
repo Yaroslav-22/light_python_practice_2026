@@ -1,5 +1,6 @@
 import sys
 import os
+from scanner import scan_folder
 
 def main():
     if len(sys.argv) < 2:
@@ -13,7 +14,17 @@ def main():
         sys.exit(1)
 
     print(f"Принят путь: {target_folder}")
-    print("Этап 1 готов")
+    print(f"Сканирование папки: {target_folder}\n")
+
+    files = scan_folder(target_folder)
+
+    print(f"Найдено файлов: {len(files)}\n")
+    print("Список файлов (путь | размер (байт) | дата изменения):")
+    print("-" * 80)
+
+    for f in files:
+        path_short = f['path'] if len(f['path']) < 60 else '...' + f['path'][-57:]
+        print(f"{path_short:<60} | {f['size']:>10} | {f['mtime']}")
 
 if __name__ == "__main__":
     main()
