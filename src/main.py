@@ -1,6 +1,7 @@
 import sys
 import os
 from scanner import scan_folder
+from dublicat import poisk_dublicat
 
 def main():
     if len(sys.argv) < 2:
@@ -24,6 +25,14 @@ def main():
     for f in files:
         print(f"Путь: {f['path']}, Размер: {f['size']} байт, Дата: {f['mtime']}")
 
-
+    dublicat = poisk_dublicat([f['path'] for f in files])
+    if not dublicat:
+        print("Дубликатов нет")
+    else:
+        print(f"\nНайдено групп дубликатов: {len(dublicat)}")
+        for h, paths in dublicat.items():
+            print(f"\nХеш: {h}")
+            for p in paths:
+                print(f"  {p}")
 if __name__ == "__main__":
     main()
